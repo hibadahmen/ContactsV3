@@ -1,0 +1,270 @@
+package tn.isetdjerba.contactsv3
+
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.util.Patterns
+import android.view.View
+import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import tn.isetdjerba.contactsv3.databinding.FragmentDetailContactBinding
+import java.io.File
+import java.io.IOException
+
+class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
+    private val model: ContactsViewModel by activityViewModels()
+    private val contactId get() = requireArguments().getLong(CONTACT_ID)
+
+    private var binding: FragmentDetailContactBinding? = null
+    private var editing = false
+    private var draftPhoto: String? = null
+    private var pendingCameraPath: String? = null
+
+    private val gallery = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null && editing) {
+            try {
+                requireContext().contentResolver.takePersistableUriPermission(
+                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                updatePhoto(uri)
+            } catch (_: SecurityException) {
+                message(R.string.photo_error)
+            }
+        }
+    }
+
+    private val camera = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        val file = pendingCameraPath?.let(::File)
+        pendingCameraPath = null
+
+        if (file != null) {
+            if (success && editing && file.length() > 0) {
+                updatePhoto(cameraUri(file))
+            } else {
+                file.delete()
+                if (success) message(R.string.photo_error)
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        editing = savedInstanceState?.getBoolean("editing") ?: false
+        draftPhoto = savedInstanceState?.getString("draft_photo")
+        pendingCameraPath = savedInstanceState?.getString("camera_path")
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val screen = FragmentDetailContactBinding.bind(view)
+        binding = screen
+
+        screen.back.setOnClickListener { parentFragmentManager.popBackStack() }
+
+        val contact = model.find(contactId)
+        if (contact == null) {
+            screen.displayName.setText(R.string.missing_contact)
+            renderMode(screen, available = false)
+            return
+        }
+
+        screen.displayName.text = contact.fullName
+        screen.displayPhone.text = contact.phone
+        screen.displayEmail.text = contact.email
+
+        screen.displayLatitude.text = getString(
+            R.string.latitude_label, coordinateText(contact.latitude)
+        )
+        screen.displayLongitude.text = getString(
+            R.string.longitude_label, coordinateText(contact.longitude)
+        )
+
+        screen.photo.showPhoto(if (editing) draftPhoto else contact.photoUri)
+        renderMode(screen)
+
+        screen.edit.setOnClickListener {
+            editing = true
+            draftPhoto = contact.photoUri
+
+            screen.lastName.setText(contact.lastName)
+            screen.firstName.setText(contact.firstName)
+            screen.phone.setText(contact.phone)
+            screen.email.setText(contact.email)
+            screen.latitude.setText(contact.latitude?.toString().orEmpty())
+            screen.longitude.setText(contact.longitude?.toString().orEmpty())
+
+            renderMode(screen)
+        }
+
+        screen.cancel.setOnClickListener { parentFragmentManager.popBackStack() }
+        screen.save.setOnClickListener { save(screen, contact) }
+
+        screen.call.setOnClickListener {
+            launchExternal {
+                val uri = Uri.fromParts("tel", contact.phone, null)
+                startActivity(Intent(Intent.ACTION_DIAL, uri))
+            }
+        }
+
+        screen.mail.setOnClickListener {
+            launchExternal {
+                val uri = Uri.fromParts("mailto", contact.email, null)
+                startActivity(Intent(Intent.ACTION_SENDTO, uri))
+            }
+        }
+
+        screen.gallery.setOnClickListener {
+            launchExternal { gallery.launch(arrayOf("image/*")) }
+        }
+
+        screen.camera.setOnClickListener { takePhoto() }
+
+        screen.mapAction.setOnClickListener {
+            if (contact.hasPosition) {
+                (requireActivity() as MainActivity).openMap(contact.id)
+            } else {
+                message(R.string.no_position)
+            }
+        }
+    }
+
+    private fun renderMode(
+        screen: FragmentDetailContactBinding,
+        available: Boolean = true
+    ) {
+        screen.form.isVisible = available && editing
+        listOf(screen.save, screen.cancel, screen.gallery, screen.camera).forEach {
+            it.isVisible = available && editing
+        }
+
+        screen.summary.isVisible = !editing || !available
+        listOf(screen.edit, screen.call, screen.mail, screen.mapAction).forEach {
+            it.isVisible = available && !editing
+        }
+    }
+
+    private fun save(screen: FragmentDetailContactBinding, contact: Contact) {
+        val requiredFields = listOf(
+            screen.lastName, screen.firstName, screen.phone, screen.email
+        )
+        val missing = requiredFields.filter { it.text.isBlank() }
+
+        missing.forEach { it.error = getString(R.string.required) }
+        if (missing.isNotEmpty()) return
+
+        val email = screen.email.text.toString().trim()
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            screen.email.error = getString(R.string.bad_email)
+            return
+        }
+
+        val latitude = readCoordinate(screen.latitude)
+        val longitude = readCoordinate(screen.longitude)
+
+        val invalidLatitude = screen.latitude.text.isNotBlank() &&
+                (latitude == null || latitude !in -90.0..90.0)
+        val invalidLongitude = screen.longitude.text.isNotBlank() &&
+                (longitude == null || longitude !in -180.0..180.0)
+
+        if (invalidLatitude) screen.latitude.error = getString(R.string.bad_lat)
+        if (invalidLongitude) screen.longitude.error = getString(R.string.bad_lon)
+        if (invalidLatitude || invalidLongitude) return
+
+        if ((latitude == null) != (longitude == null)) {
+            val missingCoordinate = if (latitude == null) screen.latitude else screen.longitude
+            missingCoordinate.error = getString(R.string.no_position)
+            return
+        }
+
+        model.save(
+            contact.copy(
+                lastName = screen.lastName.text.toString().trim(),
+                firstName = screen.firstName.text.toString().trim(),
+                phone = screen.phone.text.toString().trim(),
+                email = email,
+                photoUri = draftPhoto,
+                latitude = latitude,
+                longitude = longitude
+            )
+        )
+
+        parentFragmentManager.popBackStack()
+    }
+
+    private fun readCoordinate(field: EditText): Double? =
+        field.text.toString().trim().replace(',', '.').toDoubleOrNull()
+
+    private fun coordinateText(value: Double?): String =
+        value?.toString() ?: getString(R.string.undefined_coordinate)
+
+    private fun takePhoto() {
+        try {
+            val directory = File(requireContext().filesDir, "photos")
+            directory.mkdirs()
+
+            val file = File.createTempFile("contact_", ".jpg", directory)
+            pendingCameraPath = file.absolutePath
+
+            try {
+                camera.launch(cameraUri(file))
+            } catch (_: ActivityNotFoundException) {
+                pendingCameraPath = null
+                file.delete()
+                message(R.string.no_app)
+            } catch (_: SecurityException) {
+                pendingCameraPath = null
+                file.delete()
+                message(R.string.no_app)
+            }
+        } catch (_: IOException) {
+            message(R.string.photo_error)
+        }
+    }
+
+    private fun cameraUri(file: File): Uri =
+        FileProvider.getUriForFile(
+            requireContext(),
+            "${requireContext().packageName}.photos",
+            file
+        )
+
+    private fun updatePhoto(uri: Uri) {
+        draftPhoto = uri.toString()
+        binding?.photo?.showPhoto(draftPhoto)
+    }
+
+    private fun launchExternal(action: () -> Unit) {
+        try {
+            action()
+        } catch (_: ActivityNotFoundException) {
+            message(R.string.no_app)
+        } catch (_: SecurityException) {
+            message(R.string.no_app)
+        }
+    }
+
+    private fun message(text: Int) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("editing", editing)
+        outState.putString("draft_photo", draftPhoto)
+        outState.putString("camera_path", pendingCameraPath)
+    }
+
+    override fun onDestroyView() {
+        binding = null
+        super.onDestroyView()
+    }
+}

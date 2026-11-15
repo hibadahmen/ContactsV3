@@ -1,0 +1,182 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <Button
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back" />
+
+        <TextView
+            style="@style/PageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/detail" />
+
+        <ImageView
+            android:id="@+id/photo"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="14dp"
+            android:contentDescription="@string/photo"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:id="@+id/summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/display_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/display_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/display_latitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/display_longitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="6dp"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/last_name"
+                android:text="@string/last_name" />
+
+            <EditText
+                android:id="@id/last_name"
+                style="@style/Field"
+                android:inputType="textPersonName|textCapWords"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/first_name"
+                android:text="@string/first_name" />
+
+            <EditText
+                android:id="@id/first_name"
+                style="@style/Field"
+                android:inputType="textPersonName|textCapWords"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/phone"
+                android:text="@string/phone" />
+
+            <EditText
+                android:id="@id/phone"
+                style="@style/Field"
+                android:inputType="phone"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/email"
+                android:text="@string/email" />
+
+            <EditText
+                android:id="@id/email"
+                style="@style/Field"
+                android:inputType="textEmailAddress"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/latitude"
+                android:text="@string/latitude" />
+
+            <EditText
+                android:id="@id/latitude"
+                style="@style/Field"
+                android:inputType="numberDecimal|numberSigned"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/longitude"
+                android:text="@string/longitude" />
+
+            <EditText
+                android:id="@id/longitude"
+                style="@style/Field"
+                android:inputType="numberDecimal|numberSigned"
+                android:singleLine="true" />
+
+        </LinearLayout>
+
+        <Button android:id="@+id/edit" style="@style/Field"
+            android:text="@string/edit" />
+
+        <Button android:id="@+id/save" style="@style/Field"
+            android:text="@string/save" />
+
+        <Button android:id="@+id/cancel" style="@style/Field"
+            android:text="@string/cancel" />
+
+        <Button android:id="@+id/gallery" style="@style/Field"
+            android:text="@string/gallery" />
+
+        <Button android:id="@+id/camera" style="@style/Field"
+            android:text="@string/camera" />
+
+        <Button android:id="@+id/call" style="@style/Field"
+            android:text="@string/call" />
+
+        <Button android:id="@+id/mail" style="@style/Field"
+            android:text="@string/mail" />
+
+        <Button android:id="@+id/map_action" style="@style/Field"
+            android:text="@string/map_action" />
+
+    </LinearLayout>
+</ScrollView>

@@ -2,6 +2,7 @@ package tn.isetdjerba.contactsv3
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -11,13 +12,21 @@ import androidx.recyclerview.widget.RecyclerView
 import tn.isetdjerba.contactsv3.databinding.FragmentListeContactsBinding
 
 class ListeContactsFragment : Fragment(R.layout.fragment_liste_contacts) {
+
     private val model: ContactsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val binding = FragmentListeContactsBinding.bind(view)
+        val mainActivity = requireActivity() as MainActivity
+
+        binding.addContact.setOnClickListener {
+            mainActivity.openDetail(0L)
+        }
 
         val adapter = ContactsAdapter { id ->
-            (requireActivity() as MainActivity).openDetail(id)
+            mainActivity.openDetail(id)
         }
 
         adapter.stateRestorationPolicy =
@@ -41,5 +50,22 @@ class ListeContactsFragment : Fragment(R.layout.fragment_liste_contacts) {
         model.contacts.observe(viewLifecycleOwner) { contacts ->
             showResults(contacts)
         }
+
+        model.error.observe(viewLifecycleOwner) { message ->
+            if (message != null) {
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val currentView = view ?: return
+        val binding = FragmentListeContactsBinding.bind(currentView)
+        val adapter = binding.contacts.adapter as? ContactsAdapter ?: return
+
+        adapter.applyPreferences(PreferencesManager.read(requireContext()))
+    }
+
 }

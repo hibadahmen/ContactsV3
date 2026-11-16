@@ -18,4 +18,25 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">48dp</item>
     </style>
+    <style name="ContactAction">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:background">@drawable/bg_contact_soft</item>
+        <item name="android:textColor">@color/contacts_accent_dark</item>
+    </style>
+
+    <style name="ContactAction.Primary">
+        <item name="android:background">@drawable/bg_contact_soft</item>
+        <item name="android:backgroundTint">@color/contacts_accent</item>
+        <item name="android:textColor">@color/contacts_surface</item>
+    </style>
+
+    <style name="ContactAction.Danger">
+        <item name="android:background">@drawable/bg_contact_card</item>
+        <item name="android:textColor">@color/contacts_danger</item>
+    </style>
 </resources>

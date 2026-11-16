@@ -1,11 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:background="#FFFFFF"
+    android:background="@drawable/bg_contact_card"
+    android:clipToOutline="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     android:gravity="center_vertical"
+    android:minHeight="76dp"
     android:orientation="horizontal"
     android:padding="12dp">
 
@@ -13,13 +16,15 @@
         android:id="@+id/photo"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:background="@drawable/bg_contact_add"
+        android:clipToOutline="true"
         android:importantForAccessibility="no"
         android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
+        android:layout_marginStart="12dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -27,14 +32,34 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#16292D"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="3dp"
+            android:textColor="#52676B"
+            android:textSize="16sp" />
 
     </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/call_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_contact_soft"
+        android:minWidth="0dp"
+        android:minHeight="48dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="@string/call"
+        android:textAllCaps="false"
+        android:textColor="@color/contacts_accent_dark"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
 </LinearLayout>

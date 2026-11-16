@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tailles_libelles">
+        <item>Petite</item>
+        <item>Moyenne</item>
+        <item>Grande</item>
+    </string-array>
+
+    <string-array name="tailles_valeurs">
+        <item>14</item>
+        <item>16</item>
+        <item>20</item>
+    </string-array>
+
+    <string-array name="couleurs_libelles">
+        <item>Noir</item>
+        <item>Bleu</item>
+        <item>Vert</item>
+        <item>Rouge</item>
+        <item>Violet</item>
+    </string-array>
+
+    <string-array name="couleurs_valeurs">
+        <item>#000000</item>
+        <item>#174AAB</item>
+        <item>#166534</item>
+        <item>#B91C1C</item>
+        <item>#6B21A8</item>
+    </string-array>
+    <color name="contacts_background">#F5F7EF</color>
+    <color name="contacts_surface">#FFFFFF</color>
+    <color name="contacts_soft">#E7EEDB</color>
+    <color name="contacts_hero_start">#D9E7C4</color>
+    <color name="contacts_hero_end">#EDF3E4</color>
+    <color name="contacts_accent">#3F6425</color>
+    <color name="contacts_accent_dark">#304C1E</color>
+    <color name="contacts_text">#1D2918</color>
+    <color name="contacts_muted">#51604A</color>
+    <color name="contacts_border">#DDE6D5</color>
+    <color name="contacts_danger">#8A302D</color>
+</resources>

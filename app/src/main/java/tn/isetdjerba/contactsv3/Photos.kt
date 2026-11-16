@@ -3,12 +3,14 @@ package tn.isetdjerba.contactsv3
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.ImageView
+import java.io.File
 import java.io.IOException
 
 fun ImageView.showPhoto(value: String?) {
     setImageResource(R.drawable.ic_contact)
 
-    val uri = value?.let(Uri::parse) ?: return
+    val path = value ?: return
+    val uri = if (path.startsWith("/")) Uri.fromFile(File(path)) else Uri.parse(path)
     val resolver = context.contentResolver
 
     try {

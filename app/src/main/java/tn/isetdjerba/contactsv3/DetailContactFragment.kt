@@ -1,5 +1,5 @@
 package tn.isetdjerba.contactsv3
-
+import androidx.appcompat.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -18,6 +18,7 @@ import java.io.File
 import java.io.IOException
 
 class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
+
     private val model: ContactsViewModel by activityViewModels()
     private val contactId get() = requireArguments().getLong(CONTACT_ID)
 
@@ -32,7 +33,8 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         if (uri != null && editing) {
             try {
                 requireContext().contentResolver.takePersistableUriPermission(
-                    uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
                 updatePhoto(uri)
             } catch (_: SecurityException) {
@@ -65,27 +67,52 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val screen = FragmentDetailContactBinding.bind(view)
         binding = screen
 
         screen.back.setOnClickListener { parentFragmentManager.popBackStack() }
+        screen.cancel.setOnClickListener { parentFragmentManager.popBackStack() }
+        if (contactId == 0L) {
+            editing = true
+            screen.photo.showPhoto(draftPhoto)
+            renderMode(screen)
 
-        val contact = model.find(contactId)
-        if (contact == null) {
-            screen.displayName.setText(R.string.missing_contact)
-            renderMode(screen, available = false)
+            screen.gallery.setOnClickListener {
+                launchExternal { gallery.launch(arrayOf("image/*")) }
+            }
+            screen.camera.setOnClickListener { takePhoto() }
+
+            screen.save.setOnClickListener {
+                save(screen, Contact(lastName = "", firstName = "", phone = ""))
+            }
             return
         }
+        model.contacts.observe(viewLifecycleOwner) { contacts ->
+            val contact = contacts.firstOrNull { it.id == contactId }
 
+            if (contact == null) {
+                screen.displayName.setText(R.string.missing_contact)
+                renderMode(screen, available = false)
+            } else {
+                showContact(screen, contact)
+            }
+        }
+    }
+
+    private fun showContact(screen: FragmentDetailContactBinding, contact: Contact) {
         screen.displayName.text = contact.fullName
         screen.displayPhone.text = contact.phone
-        screen.displayEmail.text = contact.email
+        screen.displayEmail.text = contact.email.orEmpty()
 
         screen.displayLatitude.text = getString(
-            R.string.latitude_label, coordinateText(contact.latitude)
+            R.string.latitude_label,
+            coordinateText(contact.latitude)
         )
         screen.displayLongitude.text = getString(
-            R.string.longitude_label, coordinateText(contact.longitude)
+            R.string.longitude_label,
+            coordinateText(contact.longitude)
         )
 
         screen.photo.showPhoto(if (editing) draftPhoto else contact.photoUri)
@@ -98,16 +125,37 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
             screen.lastName.setText(contact.lastName)
             screen.firstName.setText(contact.firstName)
             screen.phone.setText(contact.phone)
-            screen.email.setText(contact.email)
+            screen.email.setText(contact.email.orEmpty())
             screen.latitude.setText(contact.latitude?.toString().orEmpty())
             screen.longitude.setText(contact.longitude?.toString().orEmpty())
 
             renderMode(screen)
         }
 
-        screen.cancel.setOnClickListener { parentFragmentManager.popBackStack() }
         screen.save.setOnClickListener { save(screen, contact) }
+        screen.deleteContact.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Supprimer le contact")
+                .setMessage("Supprimer ${contact.fullName} ?")
+                .setNegativeButton("Annuler", null)
+                .setPositiveButton("Supprimer") { _, _ ->
+                    screen.deleteContact.isEnabled = false
 
+                    model.delete(contact.id) finished@{ success ->
+                        val currentScreen = binding ?: return@finished
+                        currentScreen.deleteContact.isEnabled = true
+
+                        if (success) {
+                            if (!parentFragmentManager.isStateSaved) {
+                                parentFragmentManager.popBackStack()
+                            }
+                        } else {
+                            message("Impossible de supprimer le contact.")
+                        }
+                    }
+                }
+                .show()
+        }
         screen.call.setOnClickListener {
             launchExternal {
                 val uri = Uri.fromParts("tel", contact.phone, null)
@@ -116,9 +164,15 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         }
 
         screen.mail.setOnClickListener {
-            launchExternal {
-                val uri = Uri.fromParts("mailto", contact.email, null)
-                startActivity(Intent(Intent.ACTION_SENDTO, uri))
+            val address = contact.email
+
+            if (address.isNullOrBlank()) {
+                message("Aucune adresse e-mail pour ce contact.")
+            } else {
+                launchExternal {
+                    val uri = Uri.fromParts("mailto", address, null)
+                    startActivity(Intent(Intent.ACTION_SENDTO, uri))
+                }
             }
         }
 
@@ -142,27 +196,28 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         available: Boolean = true
     ) {
         screen.form.isVisible = available && editing
+
         listOf(screen.save, screen.cancel, screen.gallery, screen.camera).forEach {
             it.isVisible = available && editing
         }
 
         screen.summary.isVisible = !editing || !available
+
         listOf(screen.edit, screen.call, screen.mail, screen.mapAction).forEach {
             it.isVisible = available && !editing
         }
+        screen.deleteContact.isVisible = available && !editing && contactId != 0L
     }
 
     private fun save(screen: FragmentDetailContactBinding, contact: Contact) {
-        val requiredFields = listOf(
-            screen.lastName, screen.firstName, screen.phone, screen.email
-        )
+        val requiredFields = listOf(screen.lastName, screen.firstName, screen.phone)
         val missing = requiredFields.filter { it.text.isBlank() }
 
         missing.forEach { it.error = getString(R.string.required) }
         if (missing.isNotEmpty()) return
 
         val email = screen.email.text.toString().trim()
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isNotEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             screen.email.error = getString(R.string.bad_email)
             return
         }
@@ -185,19 +240,30 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
             return
         }
 
-        model.save(
-            contact.copy(
-                lastName = screen.lastName.text.toString().trim(),
-                firstName = screen.firstName.text.toString().trim(),
-                phone = screen.phone.text.toString().trim(),
-                email = email,
-                photoUri = draftPhoto,
-                latitude = latitude,
-                longitude = longitude
-            )
+        val updatedContact = contact.copy(
+            lastName = screen.lastName.text.toString().trim(),
+            firstName = screen.firstName.text.toString().trim(),
+            phone = screen.phone.text.toString().trim(),
+            email = email.takeIf { it.isNotEmpty() },
+            photoUri = draftPhoto,
+            latitude = latitude,
+            longitude = longitude
         )
 
-        parentFragmentManager.popBackStack()
+        screen.save.isEnabled = false
+
+        model.save(updatedContact) finished@{ success ->
+            val currentScreen = binding ?: return@finished
+            currentScreen.save.isEnabled = true
+
+            if (success) {
+                if (!parentFragmentManager.isStateSaved) {
+                    parentFragmentManager.popBackStack()
+                }
+            } else {
+                message("Impossible d’enregistrer le contact.")
+            }
+        }
     }
 
     private fun readCoordinate(field: EditText): Double? =
@@ -253,6 +319,10 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
     }
 
     private fun message(text: Int) {
+        message(getString(text))
+    }
+
+    private fun message(text: String) {
         Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
@@ -262,7 +332,22 @@ class DetailContactFragment : Fragment(R.layout.fragment_detail_contact) {
         outState.putString("draft_photo", draftPhoto)
         outState.putString("camera_path", pendingCameraPath)
     }
+    override fun onResume() {
+        super.onResume()
 
+        val screen = binding ?: return
+        val preferences = PreferencesManager.read(requireContext())
+
+        screen.displayName.textSize = preferences.textSizeSp
+        screen.displayName.setTextColor(preferences.nameColor)
+        screen.displayPhone.textSize = preferences.textSizeSp
+
+        screen.firstName.textSize = preferences.textSizeSp
+        screen.firstName.setTextColor(preferences.nameColor)
+        screen.lastName.textSize = preferences.textSizeSp
+        screen.lastName.setTextColor(preferences.nameColor)
+        screen.phone.textSize = preferences.textSizeSp
+    }
     override fun onDestroyView() {
         binding = null
         super.onDestroyView()

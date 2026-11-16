@@ -1,90 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/contacts_background"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
         <Button
             android:id="@+id/back"
+            style="@style/ContactAction"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/back" />
 
         <TextView
             style="@style/PageTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/detail" />
-
-        <ImageView
-            android:id="@+id/photo"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="14dp"
-            android:contentDescription="@string/photo"
-            android:scaleType="centerCrop" />
+            android:layout_marginTop="16dp"
+            android:text="@string/detail"
+            android:textColor="@color/contacts_text" />
 
         <LinearLayout
-            android:id="@+id/summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_contact_hero"
+            android:orientation="vertical"
+            android:padding="18dp">
 
-            <TextView
-                android:id="@+id/display_name"
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/bg_contact_add"
+                android:clipToOutline="true"
+                android:contentDescription="@string/photo"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="6dp"
-                android:textSize="17sp" />
+                android:layout_marginTop="14dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/display_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="6dp"
-                android:textSize="17sp" />
+                <TextView
+                    android:id="@+id/display_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:textColor="@color/contacts_text"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/display_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="6dp"
-                android:textSize="17sp" />
+                <TextView
+                    android:id="@+id/display_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:textColor="@color/contacts_muted"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/display_latitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="6dp"
-                android:textSize="17sp" />
+                <TextView
+                    android:id="@+id/display_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/contacts_muted"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/display_longitude"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="6dp"
-                android:textSize="17sp" />
+                <TextView
+                    android:id="@+id/display_latitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/contacts_muted"
+                    android:textSize="14sp" />
 
+                <TextView
+                    android:id="@+id/display_longitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@color/contacts_muted"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_contact_card"
             android:orientation="vertical"
+            android:padding="16dp"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/last_name"
-                android:text="@string/last_name" />
+                android:text="@string/last_name"
+                android:textColor="@color/contacts_muted" />
 
             <EditText
                 android:id="@id/last_name"
@@ -95,8 +123,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:labelFor="@+id/first_name"
-                android:text="@string/first_name" />
+                android:text="@string/first_name"
+                android:textColor="@color/contacts_muted" />
 
             <EditText
                 android:id="@id/first_name"
@@ -107,8 +137,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:labelFor="@+id/phone"
-                android:text="@string/phone" />
+                android:text="@string/phone"
+                android:textColor="@color/contacts_muted" />
 
             <EditText
                 android:id="@id/phone"
@@ -119,8 +151,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:labelFor="@+id/email"
-                android:text="@string/email" />
+                android:text="@string/email"
+                android:textColor="@color/contacts_muted" />
 
             <EditText
                 android:id="@id/email"
@@ -131,8 +165,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:labelFor="@+id/latitude"
-                android:text="@string/latitude" />
+                android:text="@string/latitude"
+                android:textColor="@color/contacts_muted" />
 
             <EditText
                 android:id="@id/latitude"
@@ -143,8 +179,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:labelFor="@+id/longitude"
-                android:text="@string/longitude" />
+                android:text="@string/longitude"
+                android:textColor="@color/contacts_muted" />
 
             <EditText
                 android:id="@id/longitude"
@@ -154,29 +192,55 @@
 
         </LinearLayout>
 
-        <Button android:id="@+id/edit" style="@style/Field"
+        <Button
+            android:id="@+id/edit"
+            style="@style/ContactAction.Primary"
             android:text="@string/edit" />
 
-        <Button android:id="@+id/save" style="@style/Field"
-            android:text="@string/save" />
+        <Button
+            android:id="@+id/gallery"
+            style="@style/ContactAction"
+            android:text="@string/gallery"
+            android:visibility="gone" />
 
-        <Button android:id="@+id/cancel" style="@style/Field"
-            android:text="@string/cancel" />
+        <Button
+            android:id="@+id/camera"
+            style="@style/ContactAction"
+            android:text="@string/camera"
+            android:visibility="gone" />
 
-        <Button android:id="@+id/gallery" style="@style/Field"
-            android:text="@string/gallery" />
+        <Button
+            android:id="@+id/save"
+            style="@style/ContactAction.Primary"
+            android:text="@string/save"
+            android:visibility="gone" />
 
-        <Button android:id="@+id/camera" style="@style/Field"
-            android:text="@string/camera" />
+        <Button
+            android:id="@+id/cancel"
+            style="@style/ContactAction"
+            android:text="@string/cancel"
+            android:visibility="gone" />
 
-        <Button android:id="@+id/call" style="@style/Field"
+        <Button
+            android:id="@+id/call"
+            style="@style/ContactAction"
             android:text="@string/call" />
 
-        <Button android:id="@+id/mail" style="@style/Field"
+        <Button
+            android:id="@+id/mail"
+            style="@style/ContactAction"
             android:text="@string/mail" />
 
-        <Button android:id="@+id/map_action" style="@style/Field"
+        <Button
+            android:id="@+id/map_action"
+            style="@style/ContactAction"
             android:text="@string/map_action" />
+
+        <Button
+            android:id="@+id/delete_contact"
+            style="@style/ContactAction.Danger"
+            android:text="Supprimer"
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>

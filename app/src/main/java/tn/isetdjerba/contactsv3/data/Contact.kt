@@ -8,18 +8,23 @@ data class Contact(
     val email: String? = null,
     val photoUri: String? = null,
     val latitude: Double? = null,
-    val longitude: Double? = null
+    val longitude: Double? = null,
+    val favorite: Boolean = false,
+    val family: Boolean = false
 ) {
-
     val fullName: String
         get() = "$firstName $lastName"
 
     val hasPosition: Boolean
         get() = latitude != null && latitude in -90.0..90.0 &&
                 longitude != null && longitude in -180.0..180.0
+
     fun matches(query: String): Boolean =
         lastName.contains(query, ignoreCase = true) ||
                 firstName.contains(query, ignoreCase = true) ||
                 fullName.contains(query, ignoreCase = true) ||
                 phone.contains(query)
+
+    val phoneKey: String
+        get() = phone.filter { it.isDigit() }
 }

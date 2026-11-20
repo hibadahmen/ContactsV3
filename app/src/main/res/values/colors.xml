@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="contact_background">#FFFFFF</color>
+    <color name="contact_surface">#FFFFFF</color>
+    <color name="contact_purple">#1982C4</color>
+    <color name="contact_purple_light">#E8F3FB</color>
+    <color name="contact_text">#1B263B</color>
+    <color name="contact_hint">#526075</color>
+    <color name="contact_border">#DCE3EB</color>
+    <color name="contact_turquoise">#1982C4</color>
+    <color name="contact_coral">#778DA9</color>
+
+    <color name="contacts_background">#FFFFFF</color>
+    <color name="contacts_surface">#FFFFFF</color>
+    <color name="contacts_soft">#E8F3FB</color>
+    <color name="contacts_hero_start">#FFFFFF</color>
+    <color name="contacts_hero_end">#E8F3FB</color>
+    <color name="contacts_accent">#00509D</color>
+    <color name="contacts_accent_dark">#00509D</color>
+    <color name="contacts_text">#1B263B</color>
+    <color name="contacts_muted">#00509D</color>
+    <color name="contacts_border">#DCE3EB</color>
+    <color name="contacts_danger">#8A302D</color>
+
 </resources>

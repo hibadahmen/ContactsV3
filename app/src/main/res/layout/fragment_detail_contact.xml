@@ -2,245 +2,328 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/contacts_background"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    style="@style/ContactPage">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/back"
-            style="@style/ContactAction"
             android:layout_width="wrap_content"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:text="@string/back" />
+            android:layout_height="wrap_content"
+            android:text="Retour"
+            style="@style/ContactSecondaryButton" />
 
         <TextView
-            style="@style/PageTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/detail"
-            android:textColor="@color/contacts_text" />
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="20dp"
+            android:text="Fiche contact"
+            style="@style/ContactTitle" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_contact_hero"
             android:orientation="vertical"
-            android:padding="18dp">
+            style="@style/ContactCard">
 
             <ImageView
                 android:id="@+id/photo"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
+                android:layout_width="104dp"
+                android:layout_height="104dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/bg_contact_add"
-                android:clipToOutline="true"
-                android:contentDescription="@string/photo"
-                android:scaleType="centerCrop" />
+                android:background="@drawable/bg_contact_input"
+                android:contentDescription="Photo du contact"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_menu_myplaces" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/gallery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:text="Galerie"
+                    style="@style/ContactSecondaryButton" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/camera"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:text="Caméra"
+                    style="@style/ContactSecondaryButton" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="20dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/display_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="center"
-                    android:textColor="@color/contacts_text"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/display_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center"
-                    android:textColor="@color/contacts_muted"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/display_email"
+                    android:id="@+id/displayName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="@color/contacts_muted"
-                    android:textSize="14sp" />
+                    style="@style/ContactTitle" />
 
                 <TextView
-                    android:id="@+id/display_latitude"
+                    android:id="@+id/displayGroups"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textColor="@color/contact_purple"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/displayPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/contact_text"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/displayEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:textColor="@color/contacts_muted"
+                    android:textColor="@color/contact_hint"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/displayLatitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/contact_hint"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/display_longitude"
+                    android:id="@+id/displayLongitude"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textColor="@color/contacts_muted"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/contact_hint"
                     android:textSize="14sp" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/lastName"
+                    android:text="Nom"
+                    style="@style/ContactLabel" />
+
+                <EditText
+                    android:id="@+id/lastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nom du contact"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLines="1"
+                    style="@style/ContactInput" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/firstName"
+                    android:text="Prénom"
+                    style="@style/ContactLabel" />
+
+                <EditText
+                    android:id="@+id/firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Prénom du contact"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLines="1"
+                    style="@style/ContactInput" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/phone"
+                    android:text="Téléphone"
+                    style="@style/ContactLabel" />
+
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="+216"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    style="@style/ContactInput" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/email"
+                    android:text="E-mail"
+                    style="@style/ContactLabel" />
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="exemple@email.com"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    style="@style/ContactInput" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Groupes"
+                    style="@style/ContactLabel" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkFavorite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:buttonTint="@color/contact_purple"
+                    android:text="Ajouter aux favoris"
+                    android:textColor="@color/contact_text" />
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkFamily"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:buttonTint="@color/contact_purple"
+                    android:text="Ma famille"
+                    android:textColor="@color/contact_text" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/latitude"
+                    android:text="Latitude"
+                    style="@style/ContactLabel" />
+
+                <EditText
+                    android:id="@+id/latitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Exemple : 33.8076"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:maxLines="1"
+                    style="@style/ContactInput" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/longitude"
+                    android:text="Longitude"
+                    style="@style/ContactLabel" />
+
+                <EditText
+                    android:id="@+id/longitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Exemple : 10.8451"
+                    android:inputType="numberDecimal|numberSigned"
+                    android:maxLines="1"
+                    style="@style/ContactInput" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/form"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/bg_contact_card"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:visibility="gone">
+            android:layout_marginTop="20dp"
+            android:text="Modifier"
+            style="@style/ContactPrimaryButton" />
 
-            <TextView
-                android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/call"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/last_name"
-                android:text="@string/last_name"
-                android:textColor="@color/contacts_muted" />
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:text="Appeler"
+                style="@style/ContactSecondaryButton" />
 
-            <EditText
-                android:id="@id/last_name"
-                style="@style/Field"
-                android:inputType="textPersonName|textCapWords"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mail"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:labelFor="@+id/first_name"
-                android:text="@string/first_name"
-                android:textColor="@color/contacts_muted" />
-
-            <EditText
-                android:id="@id/first_name"
-                style="@style/Field"
-                android:inputType="textPersonName|textCapWords"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:labelFor="@+id/phone"
-                android:text="@string/phone"
-                android:textColor="@color/contacts_muted" />
-
-            <EditText
-                android:id="@id/phone"
-                style="@style/Field"
-                android:inputType="phone"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:labelFor="@+id/email"
-                android:text="@string/email"
-                android:textColor="@color/contacts_muted" />
-
-            <EditText
-                android:id="@id/email"
-                style="@style/Field"
-                android:inputType="textEmailAddress"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:labelFor="@+id/latitude"
-                android:text="@string/latitude"
-                android:textColor="@color/contacts_muted" />
-
-            <EditText
-                android:id="@id/latitude"
-                style="@style/Field"
-                android:inputType="numberDecimal|numberSigned"
-                android:singleLine="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:labelFor="@+id/longitude"
-                android:text="@string/longitude"
-                android:textColor="@color/contacts_muted" />
-
-            <EditText
-                android:id="@id/longitude"
-                style="@style/Field"
-                android:inputType="numberDecimal|numberSigned"
-                android:singleLine="true" />
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:text="E-mail"
+                style="@style/ContactSecondaryButton" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/edit"
-            style="@style/ContactAction.Primary"
-            android:text="@string/edit" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mapAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Voir sur la carte"
+            style="@style/ContactSecondaryButton" />
 
-        <Button
-            android:id="@+id/gallery"
-            style="@style/ContactAction"
-            android:text="@string/gallery"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/camera"
-            style="@style/ContactAction"
-            android:text="@string/camera"
-            android:visibility="gone" />
-
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/save"
-            style="@style/ContactAction.Primary"
-            android:text="@string/save"
-            android:visibility="gone" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Enregistrer"
+            android:visibility="gone"
+            style="@style/ContactPrimaryButton" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/cancel"
-            style="@style/ContactAction"
-            android:text="@string/cancel"
-            android:visibility="gone" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Annuler"
+            android:visibility="gone"
+            style="@style/ContactSecondaryButton" />
 
-        <Button
-            android:id="@+id/call"
-            style="@style/ContactAction"
-            android:text="@string/call" />
-
-        <Button
-            android:id="@+id/mail"
-            style="@style/ContactAction"
-            android:text="@string/mail" />
-
-        <Button
-            android:id="@+id/map_action"
-            style="@style/ContactAction"
-            android:text="@string/map_action" />
-
-        <Button
-            android:id="@+id/delete_contact"
-            style="@style/ContactAction.Danger"
-            android:text="Supprimer"
-            android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/deleteContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="24dp"
+            android:text="Supprimer le contact"
+            android:textColor="#B3261E"
+            style="@style/ContactSecondaryButton" />
 
     </LinearLayout>
+
 </ScrollView>

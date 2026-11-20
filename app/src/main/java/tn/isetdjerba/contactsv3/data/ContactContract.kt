@@ -10,11 +10,22 @@ object ContactContract {
     const val PHOTO_URI = "photo_uri"
     const val LATITUDE = "latitude"
     const val LONGITUDE = "longitude"
+    const val FAVORITE = "favori"
+    const val FAMILY = "famille"
 
     val columns = arrayOf(
-        ID, LAST_NAME, FIRST_NAME, PHONE, EMAIL,
-        PHOTO_URI, LATITUDE, LONGITUDE
+        ID,
+        LAST_NAME,
+        FIRST_NAME,
+        PHONE,
+        EMAIL,
+        PHOTO_URI,
+        LATITUDE,
+        LONGITUDE,
+        FAVORITE,
+        FAMILY
     )
 
-    const val DEFAULT_ORDER = "$LAST_NAME COLLATE NOCASE, $FIRST_NAME COLLATE NOCASE"
+    const val DEFAULT_ORDER =
+        "$LAST_NAME COLLATE NOCASE, $FIRST_NAME COLLATE NOCASE"
 }
